@@ -15,12 +15,12 @@ image::images/image-2024-02-19-09-20-45-194.jpg[]
 image::images/image-2024-02-19-09-46-08-157.jpg[]
 * view resolver는 webconfig.java에서 수행하고 있다.
 
-* ApplicationContext vs WebApplicationContext
-** WebApplicationContext = ApplicationContext + ServletContext 되어 있음
-** @EnableWebMvc 어노테이션을 통해 사용
-** 추가 설정을 원한다면 WebMvcConfigurer 인터페이스를 implement하거나, WebMvcConfigurationSupport 클래스를 extend하여 구현한다.
-** Spring Boot가 좋은 이유: 부트에서는 WebMvcAutoConfiguration 에서 자동으로 해줌
-** 요즘은 xml 안쓰고 jaavaconfig으로 한다.
+== ApplicationContext vs WebApplicationContext
+* WebApplicationContext = ApplicationContext + ServletContext 되어 있음
+* @EnableWebMvc 어노테이션을 통해 사용
+* 추가 설정을 원한다면 WebMvcConfigurer 인터페이스를 implement하거나, WebMvcConfigurationSupport 클래스를 extend하여 구현한다.
+* Spring Boot가 좋은 이유: 부트에서는 WebMvcAutoConfiguration 에서 자동으로 해줌
+* 요즘은 xml 안쓰고 javaconfig으로 한다.
 
 * 실습: branch "initializer"
 ** WebApplicationInitializer 상속, AbstractAnnotationConfigDispatcherServletInitializer 상속의 두 가지 방버빙 있다.
@@ -46,12 +46,58 @@ war plugin import 코드
 image::images/image-2024-02-19-11-17-47-788.jpg[]
 controller import 시 주의, mvc.controller import 시 오류
 
-* controller: 요청-처리-흐름 제어
+== controller
+* 요청-처리-흐름 제어
 * @Controller annotation을 통해 컴포넌트 스캔 시 bean으로 등록.
 * @RestController: viewresolver가 아닌 HttpMessageConverter가 처리
 
+== Request Mapping
+* @RequestMapping 어노테이션 사용, 요청을 Controller 메서드에 맵핑
 
+* 사용법은 다음과 같다.
+[,java]
+----
+@RequestMapping(value = "/persons", method=RequestMethod.GET)
+@RequestMapping(value = "/persons", method=RequestMethod.POST)
+@RequestMapping(value = "/persons", method=RequestMethod.PUT)
+@RequestMapping(value = "/persons", method=RequestMethod.DELETE)
+@RequestMapping(value = "/persons", method=RequestMethod.PATCH)
+@RequestMapping(value = "/persons", method=RequestMethod.HEAD)
+@RequestMapping(value = "/persons", method=RequestMethod.OPTIONS)
+@RequestMapping(value = "/persons", method=RequestMethod.TRACE)
+----
 
+* 어노테이션 일부는 미리 정의되어 있다.
 
+[,java]
+----
+@GetMapping == @RequestMapping(method=RequestMethod.GET)
+@PostMapping == @RequestMapping(method=RequestMethod.POST)
+@PutMapping == @RequestMapping(method=RequestMethod.PUT)
+@DeleteMapping == @RequestMapping(method=RequestMethod.DELETE)
+@PatchMapping == @RequestMapping(method=RequestMethod.PATCH)
+----
 
+* request parameter와 연결하는 예시 코드
+
+[,java]
+----
+//id parameter가 있는 경우에만
+@RequestMapping(method = RequestMethod.GET, params = { "id" })
+//id parameter가 없는 경우에만
+@GetMapping(params = { "!id" })
+//type parameter 값이 raw인 경우에만
+@GetMapping(params = "type=raw")
+//type parameter 값이 raw가 아닌 경우에만
+@GetMapping(params = "type!=raw")
+----
+
+== Model 이용하기
+* Model로 이용할 수 있는 type
+** java.util.Map / interface
+** org.springframework.ui.Model / interface
+** org.springframework.ui.ModelMap / class
+
+* 실제 처리되는 내용
+** Model에 설정한 속성(attribute)이 View에 request.attribute 로 전달됨
 
