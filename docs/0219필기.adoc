@@ -1,0 +1,57 @@
+= Spring MVC
+
+== MVC
+* 디자인 패턴을 의미함
+
+image::images/image-2024-02-19-09-17-48-538.jpg[]
+* MVC 패턴 요약. view=JSP파일, controller=frontservlet(스프링에서는 dispatcherservlet), model=각종 service/controller 등.
+
+image::images/image-2024-02-19-09-20-45-194.jpg[]
+* 쇼핑몰 프로젝트 예시
+
+== Front Controller Pattern
+* Servlet ApplicationContext: DispatcherServlet, spring의 기본 서블릿, 서비스 bean들을 관리
+
+image::images/image-2024-02-19-09-46-08-157.jpg[]
+* view resolver는 webconfig.java에서 수행하고 있다.
+
+* ApplicationContext vs WebApplicationContext
+** WebApplicationContext = ApplicationContext + ServletContext 되어 있음
+** @EnableWebMvc 어노테이션을 통해 사용
+** 추가 설정을 원한다면 WebMvcConfigurer 인터페이스를 implement하거나, WebMvcConfigurationSupport 클래스를 extend하여 구현한다.
+** Spring Boot가 좋은 이유: 부트에서는 WebMvcAutoConfiguration 에서 자동으로 해줌
+** 요즘은 xml 안쓰고 jaavaconfig으로 한다.
+
+* 실습: branch "initializer"
+** WebApplicationInitializer 상속, AbstractAnnotationConfigDispatcherServletInitializer 상속의 두 가지 방버빙 있다.
+** 전자는 자세하지만 복잡해질 수 있고, 후자는 간단하지만 상세한 설정이 불가능하다. 취사선택.
+
+* 실습: springmvc2
+** war plugin
+
+[,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.3.2</version>
+        </plugin>
+    </plugins>
+</build>
+----
+war plugin import 코드
+
+image::images/image-2024-02-19-11-17-47-788.jpg[]
+controller import 시 주의, mvc.controller import 시 오류
+
+* controller: 요청-처리-흐름 제어
+* @Controller annotation을 통해 컴포넌트 스캔 시 bean으로 등록.
+* @RestController: viewresolver가 아닌 HttpMessageConverter가 처리
+
+
+
+
+
+
