@@ -11,8 +11,7 @@
     <title>Title</title>
 </head>
 <body>
-<%@ page import="java.util.Date" %>
 
-<%= new Date().toString() %>
+<%= request.getAttribute("now") %>
 </body>
 </html>

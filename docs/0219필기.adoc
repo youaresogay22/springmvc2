@@ -93,11 +93,73 @@ controller import 시 주의, mvc.controller import 시 오류
 ----
 
 == Model 이용하기
-* Model로 이용할 수 있는 type
-** java.util.Map / interface
-** org.springframework.ui.Model / interface
-** org.springframework.ui.ModelMap / class
-
-* 실제 처리되는 내용
+* model: 스프링에서 데이터를 전달하는 방식.
 ** Model에 설정한 속성(attribute)이 View에 request.attribute 로 전달됨
+
+* 사용방법
+
+[,java]
+----
+public String now(Model model) {
+        model.addAttribute("now", new Date().toString());
+
+        return "now";
+    }
+----
+위와 같이 메서드 파라미터로 받으면 된다
+
+** 쇼핑몰 프로젝트의 req.setattribute와 동일함, 전달하는 객체가 httpservletrequest에서 model이 되었을 뿐
+* model 외에도 java map, spring modelmap 등의 객체를 사용할 수 있다.
+* modelandview도 사용할 수 있으나 modelandview는 이제 구식이라 잘 쓰지 않는다.
+** modelandview는 파라미터로 안받고 객체를 생성하여 add attribute 한 뒤 modelandview 객체 자체를 리턴하면 된다.
+
+
+== parameter 받아오기
+
+* @RequestParam 어노테이션 사용
+
+[,java]
+----
+// request URL
+GET http://localhost:8080/persons?order=-createdAt
+
+//Controller Method
+@GetMapping("/persons")
+public List<Person> getPersons(@RequestParam(name="order") String order) {
+    // ...
+}
+----
+
+== 가변 파라미터 가져오기
+
+* @PathVariable 어노테이션 사용
+* 요청 URL의 Resource(Path)을 처리하기 위한 어노테이션
+* @RequestMapping 의 path 에 변수명을 입력받기 위한 place holder 가 필요함
+
+[,java]
+----
+// 요청 URL
+GET http://localhost:8080/persons/99499102
+
+
+// Controller Method
+@GetMapping("/persons/{personId}")
+public List<Person> getPersons(@PathVariable(name="personId", required=true) Long personId) {
+    // ...
+}
+----
+위와 같이 사용
+
+
+== URL HTTP 헤더 가져오기
+
+* @RequestHeader 어노테이션 사용
+* 사용법은 path 등과 유사
+
+
+== Cookie 값 가져오기
+
+* @CookieValue 어노테이션 사용
+* 사용법은 path 등과 유사
+
 
