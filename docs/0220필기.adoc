@@ -1,0 +1,56 @@
+= spring MVC 2일차
+
+== HttpMessageConverter
+* request/respsonse body 변환하여 자바 오브젝트로 만듬
+* json을 받아서 object로 변환하거나 역을 수행
+
+* 실습: HTTP Request/@RequestBody(파라미터 어노테이션)
+** @RequestBody 어노테이션 사용 시 객체의 기본 생성자 필요
+
+* @RestController, @RequestBody 등의 존재의미
+** 기존 view 리턴하던 컨트롤러 클래스에서 탈피해 객체/json을 핸들링할 수 있게 해준다.
+** ResponseEntity 사용하면 다양한 HTTP 응답을 전할 수 있어 응답을 커스터마이징할 수 있게 된다.
+
+* ResponseEntity.created(URI."{$URI}").build()로 리턴하면 uri로 바로 리턴할 수 있다.
+
+== Spring MVC Components
+* Handler : controller와 사실상 동일
+* view controller
+** 어떤 URL일 때 어떤 view로 rendering 할지 정하는 컨트롤러
+** webconfig 클래스에서 ViewControllerRegistry 클래스를 파라미터로 받아 사용
+
+* 실습: ViewController
+
+== Handler Interceptor
+* 필터와 유사, DispatcherServlet이 Controller를 호출하기 전/후에 req/resp 를 참조, 가공할 수 있는 일종의 필터 역할
+** 필터는 DispatcherServlet 으로 들어가기 전에 적용된다
+** user<->filter<->DispatcherServlet<->interceptor<->controller
+* 인터페이스이므로 구현하여 사용
+
+* List<HandlerInterceptor> 형식으로 chain을 해결할 수 있음
+
+* Filter vs HandlerInterceptor, 무엇이 다른가
+** 실행시점(앞서 설명한ㄴ ㅐ용)
+** applicationcontext의 범위가 다름: 필터는 root, interceptor 는 servlet
+
+* 실제 사용 방법
+
+[,java]
+----
+public class WebConfig implements WebMvcConfigurer {
+    // ...
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LocaleChangeInterceptor());
+    }
+}
+----
+
+
+
+
+
+
+
+
