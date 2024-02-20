@@ -47,10 +47,60 @@ public class WebConfig implements WebMvcConfigurer {
 }
 ----
 
+* 실습: locale interceptor
+** fixed locale resolver는 바꿀 수 없다
+** 바꿀 수 있는것은 session locale resolver
+
+* messagesource
+** messageSource라는 이름의 MessageSource 타입의 Bean을 등록해두면 Spring framework에서 다국어 처리 시 자동 처리
+
+* 실습: 시간 측정 인터셉터
+** 인터셉터 구현 클래스 내부에 stopwatch객체라던지를 생성하면 값이 오염될 수 있으므로 안된다.
+
+[,java]
+----
+public class TimerInterceptor implements HandlerInterceptor {
+    StopWatch stopWatch = new StopWatch("controllertimer");
+/// codes
+}
+----
+금지
+
+[,java]
+----
+public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        request.setAttribute("start", System.currentTimeMillis());
+        return HandlerInterceptor.super.preHandle(request, response, handler);
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        long starttime = (long) request.getAttribute("start");
+        long endtime = System.currentTimeMillis();
+        log.info("timer: {}", endtime - starttime);
+        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+    }
+----
+허용
 
 
+== File Upload
 
+* 기본 업로드: multipartconfig
+* apache commons upload: 알지.
 
+== View
+
+* ViewResolver
+** Spring MVC에서는 view 이름을 문자열로 관리 하므로, 문자열을 토대로 실제 View 구현을 결정하는 역할
+** Spring 에서는 Thymeleaf 라이브러리 사용
+
+* thymeleaf 문법 예시
+** $+{asd}+ : 변수, asd
+** #+{asd}+ : 다국어 메시지. locale 적용
+** # 태그: pre-defined objects
+** #locale, #request, #response, #session, #servletContext: MVC 객체들
+** #strings, #lists : 다 아는 그거
 
 
 
