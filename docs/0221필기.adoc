@@ -1,0 +1,35 @@
+= spring MVC 3일차
+
+== @value annotations
+* org.springframework.beans.factory.annotation.Value
+* @Value("#{systemProperties.myProp}") , @Value("${my.app.myProp}") 두가지 표현법이 존재
+* @lombok.Value
+** @Getter,
+@FieldDefaults(makeFinal=true,
+level=AccessLevel.PRIVATE),
+@AllArgsConstructor,
+@ToString,
+@EqualsAndHashCode 합쳐진 어노테이션
+
+== Content Negotiation
+* 동일한 내용(오브젝트)의 출력 포맷을 정하는 전략, 방법론
+* parameter/ accept header 두 가지 판단 경로가 존재
+* HttpMessageConverter 에서 적용
+* webconfig 파일에서 configureContentNegotiation @Override하여 설정
+
+== Spring MVC Testing
+* MockMvc: 테스트의 entry point
+* application context 있는것과 없는것 두 종류 존재
+[,java]
+----
+// StandaloneMockMvcBuilder
+// ApplicationContext 없이 Spring MVC 유닛 테스트(unit test) 수행
+MockMvcBuilders.standaloneSetup(Object... controllers)
+
+// DefaultMockMvcBuilder
+// ApplicationContext 를 가지고 Spring MVC 통합 테스트(integration test) 수행
+MockMvcBuilders.webAppContextSetup(WebApplicationContext context)
+----
+
+
+
