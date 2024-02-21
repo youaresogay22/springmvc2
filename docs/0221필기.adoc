@@ -20,16 +20,33 @@ level=AccessLevel.PRIVATE),
 == Spring MVC Testing
 * MockMvc: 테스트의 entry point
 * application context 있는것과 없는것 두 종류 존재
+
 [,java]
 ----
 // StandaloneMockMvcBuilder
-// ApplicationContext 없이 Spring MVC 유닛 테스트(unit test) 수행
+// 유닛 테스트(unit test) 시 사용
+// ApplicationContext 없음
 MockMvcBuilders.standaloneSetup(Object... controllers)
+----
 
+[,java]
+----
 // DefaultMockMvcBuilder
-// ApplicationContext 를 가지고 Spring MVC 통합 테스트(integration test) 수행
+// 통합 테스트(integration test) 시 사용
+// ApplicationContext 를 가지고 있으므로 데이터베이스/연결 등을 포함한 전체 시스템 테스트 가능
+@ExtendWith(SpringExtension.class) // Junit Runner 설정: JUnit 기능 확장
+@WebAppConfiguration // WebApplicationContext 사용을 위해
+@ContextHierarchy({ // ApplicationContext 로딩
+    @ContextConfiguration(classes = { RootConfig.class }),
+    @ContextConfiguration(classes = WebConfig.class)
+})
 MockMvcBuilders.webAppContextSetup(WebApplicationContext context)
 ----
+
+* 당연하지만 실제 환경과 더 비슷한 것은 DefaultMockMvcBuilder
+
+== 실습 진행 시 학습사항
+* 404 에러는 에러지만 에러가 아니다. 에러 핸들러로 받기 위해서는 노력 필요
 
 
 
